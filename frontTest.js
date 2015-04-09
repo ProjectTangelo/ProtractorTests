@@ -1,24 +1,21 @@
 // frontTest.js
 describe('Front End Test', function() {
-  it('Login Test', function() {
+  var username = element(by.id('user-username'));
+  var password = element(by.id('user-password'));
+  var loginButton =  element(by.buttonText('Submit'));
+
+  beforeEach(function() {
     browser.get('http://33.33.33.10/login.html');
-
-    var username = element(by.id('user-username'));
-    var password = element(by.id('user-password'));
-    var submitB =  element(by.buttonText('Submit'));
-
     username.sendKeys('admin');
     password.sendKeys('himitsu');
-    submitB.click();
-
-    //browser.get('http://33.33.33.10/#/home');
-    //expect(browser.getTitle()).toEqual('tangelo');
+    loginButton.click();
   });
-  /*
-  it('Logged in?', function() {
-    browser.get('http://33.33.33.10');
 
+  it('Login Test', function() {
+    //fails due to redirect to "/admin" which contains no angular
+    //Redirect needs to be fixed, changed, or circumvented
+    browser.setLocation('/home');
     expect(browser.getTitle()).toEqual('tangelo');
   });
-  */
+
 });
