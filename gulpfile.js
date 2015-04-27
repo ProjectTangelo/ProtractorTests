@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var protractor = require('gulp-protractor').protractor;
 
-gulp.task('protractor', function () {
+gulp.task('protractor', function (done) {
   gulp.src(['./specs/**/*.js'])
     .pipe(protractor({
       configFile: './protractor-config.js',
@@ -12,7 +12,8 @@ gulp.task('protractor', function () {
     }))
     .on('error', function (e) {
       throw e
-    });
+    })
+    .once('end', done);
 });
 
 gulp.task('test', function (done) {
