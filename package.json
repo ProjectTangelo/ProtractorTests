@@ -4,7 +4,7 @@
   "description": "Tests for Tangelo's frontend",
   "private": true,
   "scripts": {
-    "test": "sudo ./node_modules/.bin/webdriver-manager update && sudo ./node_modules/.bin/gulp test"
+    "test": "./node_modules/.bin/webdriver-manager update && ./node_modules/.bin/gulp test"
   },
   "engines": {
     "node": ">=0.10.22",

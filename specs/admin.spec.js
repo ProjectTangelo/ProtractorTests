@@ -1,13 +1,13 @@
 var request = require('supertest');
-var path = require('path');
+var path    = require('path');
 
-var baseURL = 'http://33.33.33.10';
+var baseURL        = 'http://33.33.33.10';
 var defaultTimeOut = 2000;
 
 describe('Admin Tests', function() {
 
   // Login as Admin
-  beforeEach(function() {
+  beforeEach(function(){
     // browser.driver.ignoreSynchronization = true;
 
     browser.get(baseURL + '/login.html');
@@ -23,6 +23,13 @@ describe('Admin Tests', function() {
 
     // browser.waitForAngular();
   });
+
+  /*
+  // TODO: Can't run this until the logout page is fixed. Will cause timeout in tests.
+  afterEach(function(){
+      browser.get(baseURL + '/logout');
+  });
+  */
 
 
   describe('Login Spec', function(){
@@ -101,16 +108,17 @@ describe('Admin Tests', function() {
 
       beforeEach(function(){
         username = element(by.model('user.username'));
-        fname = element(by.model('user.name_first'));
-        lname = element(by.model('user.name_last'));
-        email = element(by.model('user.email'));
-        type = element(by.id('radio-user-type'));
+        fname    = element(by.model('user.name_first'));
+        lname    = element(by.model('user.name_last'));
+        email    = element(by.model('user.email'));
+        type     = element(by.id('radio-user-type'));
         password = element(by.model('user.password'));
-        confirm = element(by.id('user-password-confirm'));
-        submit = element(by.buttonText('Submit'));
+        confirm  = element(by.id('user-password-confirm'));
+        submit   = element(by.buttonText('Submit'));
       });
 
       function addUser( newUserName ) {
+        /*
         browser.setLocation('users/add');
 
         username.sendKeys( newUserName );
@@ -127,6 +135,30 @@ describe('Admin Tests', function() {
             return url == baseURL + '/#/users';
           });
         }, defaultTimeOut);
+        */
+        addCustomUser(newUserName, 'Tyler', 'Davidson', 'tyler@david.johnny', 'eduardo');
+      }
+
+      function addCustomUser( new_newUserName, new_fname, new_lname, new_email, new_password, new_confirm ) {
+          browser.setLocation('users/add');
+
+          if( typeof new_confirm === 'undefined' )
+            new_confirm = new_password;
+
+          username.sendKeys( new_newUserName );
+          fname.sendKeys( new_fname);
+          lname.sendKeys( new_lname );
+          email.sendKeys( new_email );
+          type.click();
+          password.sendKeys( new_password );
+          confirm.sendKeys( new_confirm );
+          submit.click();
+
+          browser.driver.wait(function(){
+            return browser.driver.getCurrentUrl().then(function(url){
+              return url == baseURL + '/#/users';
+            });
+          }, defaultTimeOut);
       }
 
       function deleteLastUser() {
@@ -246,8 +278,9 @@ describe('Admin Tests', function() {
       });
 
       it('does not require first name', function(){
-          browser.setLocation('users/add');
           var newUserName = 'FirstNameNotRequired'
+          /*
+          browser.setLocation('users/add');
 
           username.sendKeys(newUserName);
           // fname.sendKeys('Tyler');
@@ -257,6 +290,9 @@ describe('Admin Tests', function() {
           password.sendKeys('eduardo');
           confirm.sendKeys('eduardo');
           submit.click();
+          */
+
+          addCustomUser( newUserName, '', 'Davidson', 'tyler@david.johnny', 'eduardo' )
 
           expect(browser.getCurrentUrl()).toBe(baseURL + '/#/users');
 
