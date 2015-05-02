@@ -10,8 +10,7 @@ describe('Admin Tests', function() {
 
   // Login as Admin
   beforeEach(function(){
-    // browser.driver.ignoreSynchronization = true;
-
+    // Redirects to the login page.
     browser.get(baseURL + '/login.html');
     element(by.id('user-username')).sendKeys('admin');
     element(by.id('user-password')).sendKeys('himitsu');
@@ -22,8 +21,6 @@ describe('Admin Tests', function() {
         return url == baseURL + '/#/home';
       });
     }, defaultTimeOut);
-
-    // browser.waitForAngular();
   });
 
   afterEach(function(){
@@ -51,7 +48,7 @@ describe('Admin Tests', function() {
 
     it('lets admin logout', function(){
       element(by.linkText('Sign Out')).click();
-      expect(browser.getCurrentUrl()).toBe(baseURL + '/login.html');
+      expect(element(by.css('body')).getAttribute('ng-app')).toMatch('login');
 
       request.get(baseURL + '/user')
         .expect(function (res) {
@@ -64,11 +61,11 @@ describe('Admin Tests', function() {
 
       browser.driver.wait(function(){
         return browser.driver.getCurrentUrl().then(function(url){
-          return url == baseURL + '/login.html';
+          return url == baseURL + '/';
         });
       }, defaultTimeOut);
 
-      expect(browser.getCurrentUrl()).toBe(baseURL + '/login.html');
+      expect(element(by.css('body')).getAttribute('ng-app')).toMatch('login');
     });
 
   });
@@ -80,7 +77,7 @@ describe('Admin Tests', function() {
 
       browser.driver.wait(function(){
         return browser.driver.getCurrentUrl().then(function(url){
-          return url == baseURL + '/login.html';
+          return url == baseURL + '/';
         });
       }, defaultTimeOut);
 
@@ -92,7 +89,7 @@ describe('Admin Tests', function() {
 
       browser.driver.wait(function(){
         return browser.driver.getCurrentUrl().then(function(url){
-          return url == baseURL + '/login.html';
+          return url == baseURL + '/';
         });
       }, defaultTimeOut);
 
