@@ -24,11 +24,16 @@ describe('Admin Tests', function() {
   });
 
   afterEach(function(){
-      request.get(baseURL + '/user')
-        .expect(function (res) {
-          if( res.body.error.message != 'Unauthorized' )
-            element(by.linkText('Sign Out')).click();
-      });
+    element(by.linkText('Sign Out')).isPresent().then(function(isFound){
+      if( isFound == true ) {
+        element(by.linkText('Sign Out')).click();
+        browser.driver.wait(function(){
+          return browser.driver.getCurrentUrl().then(function(url){
+            return url == baseURL + '/';
+          });
+        }, defaultTimeOut);
+      }
+    });
   });
 
   describe('Login Spec', function(){
@@ -119,24 +124,6 @@ describe('Admin Tests', function() {
       });
 
       function addUser( newUserName ) {
-        /*
-        browser.setLocation('users/add');
-
-        username.sendKeys( newUserName );
-        fname.sendKeys('Tyler');
-        lname.sendKeys('Davidson');
-        email.sendKeys('tyler@david.johnny');
-        type.click();
-        password.sendKeys('eduardo');
-        confirm.sendKeys('eduardo');
-        submit.click();
-
-        browser.driver.wait(function(){
-          return browser.driver.getCurrentUrl().then(function(url){
-            return url == baseURL + '/#/users';
-          });
-        }, defaultTimeOut);
-        */
         addCustomUser(newUserName, 'Tyler', 'Davidson', 'tyler@david.johnny', 'eduardo');
       }
 

@@ -8,7 +8,6 @@ gulp.task('protractor', function (done) {
       configFile: './protractor-config.js',
       verbose: false,
       includeStackTrace: false
-        // args: ['--verbose', 'false',]
     }))
     .on('error', function (e) {
       throw e

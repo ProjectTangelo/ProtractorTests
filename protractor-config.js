@@ -3,6 +3,7 @@ exports.config = {
   seleniumServerJar: './node_modules/protractor/selenium/selenium-server-standalone-2.45.0.jar',
   // specs: ['specs/*.spec.js']
   specs: ['specs/admin.spec.js'],
+  framework: 'jasmine2',
   jasmineNodeOpts: {
     // If true, display spec names.
     isVerbose: false,
@@ -12,24 +13,5 @@ exports.config = {
     includeStackTrace: false,
     // Default time to wait in ms before a test fails.
     defaultTimeoutInterval: 30000,
-  },
-/*
-  // Logs in as the admin user before every test. Don't use it because there are tests for the basic user.
-  onPrepare: function () {
-    // browser.driver.ignoreSynchronization = true;
-
-    browser.driver.get('http://33.33.33.10/login.html');
-    element(by.id('user-username')).sendKeys('admin');
-    element(by.id('user-password')).sendKeys('himitsu');
-    element(by.buttonText('Submit')).click();
-
-    browser.driver.wait(function () {
-      return browser.driver.getCurrentUrl().then(function (url) {
-        return url == 'http://33.33.33.10/#/home';
-      });
-    }, 2000);
-
-    // browser.waitForAngular();
   }
-*/
 };
