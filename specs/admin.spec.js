@@ -4,6 +4,8 @@ var path    = require('path');
 var baseURL        = 'http://33.33.33.10';
 var defaultTimeOut = 2000;
 
+request = request(baseURL);
+
 describe('Admin Tests', function() {
 
   // Login as Admin
@@ -24,18 +26,17 @@ describe('Admin Tests', function() {
     // browser.waitForAngular();
   });
 
-  /*
-  // TODO: Can't run this until the logout page is fixed. Will cause timeout in tests.
   afterEach(function(){
-      browser.get(baseURL + '/logout');
+      request.get(baseURL + '/user')
+        .expect(function (res) {
+          if( res.body.error.message != 'Unauthorized' )
+            element(by.linkText('Sign Out')).click();
+      });
   });
-  */
-
 
   describe('Login Spec', function(){
     it('redirects to home page after login', function() {
-      expect(browser.getTitle()).toEqual('tangelo');
-      // expect(browser.getCurrentUrl()).toBe(baseURL + '/#/home');
+      expect(browser.getCurrentUrl()).toBe(baseURL + '/#/home');
     });
 
     it('shows admin page', function(){
@@ -50,22 +51,14 @@ describe('Admin Tests', function() {
 
     it('lets admin logout', function(){
       element(by.linkText('Sign Out')).click();
+      expect(browser.getCurrentUrl()).toBe(baseURL + '/login.html');
 
-      var options = {
-        url: baseURL + '/user',
-        method: 'GET',
-        json: true
-      };
-
-      request
-        .get(baseURL + '/user')
+      request.get(baseURL + '/user')
         .expect(function (res) {
           res.body.error.message.to.be.equal('Unauthorized');
-        });
-
+      });
     });
 
-    // TODO: This fails because we just go directly to /logout to logout. No other routing is happening.
     it('shows login page after logout', function(){
       element(by.linkText('Sign Out')).click();
 
@@ -82,20 +75,31 @@ describe('Admin Tests', function() {
 
 
   describe('Admin Panel Spec', function(){
-    // This fails because logout does not redirect to an angular page. Also test might need some fixing.
-    it('only allows admin into admin panel', function(){
+    it('leaves admin panel on logout', function(){
       element(by.linkText('Sign Out')).click();
-      browser.setLocation('/');
 
       browser.driver.wait(function(){
         return browser.driver.getCurrentUrl().then(function(url){
-          return url == baseURL + '/';
+          return url == baseURL + '/login.html';
         });
       }, defaultTimeOut);
 
       expect( element( by.id('admin-page' ) ).isPresent() ).toBe(false);
     });
 
+    it('only allows admin into admin panel', function(){
+      element(by.linkText('Sign Out')).click();
+
+      browser.driver.wait(function(){
+        return browser.driver.getCurrentUrl().then(function(url){
+          return url == baseURL + '/login.html';
+        });
+      }, defaultTimeOut);
+
+      browser.setLocation('home');
+
+      expect( element( by.id('admin-page' ) ).isPresent() ).toBe(false);
+    });
   });
 
 
@@ -279,18 +283,6 @@ describe('Admin Tests', function() {
 
       it('does not require first name', function(){
           var newUserName = 'FirstNameNotRequired'
-          /*
-          browser.setLocation('users/add');
-
-          username.sendKeys(newUserName);
-          // fname.sendKeys('Tyler');
-          lname.sendKeys('Davidson');
-          email.sendKeys('tyler@david.johnny');
-          type.click();
-          password.sendKeys('eduardo');
-          confirm.sendKeys('eduardo');
-          submit.click();
-          */
 
           addCustomUser( newUserName, '', 'Davidson', 'tyler@david.johnny', 'eduardo' )
 
@@ -304,25 +296,17 @@ describe('Admin Tests', function() {
       });
 
       it('does not require last name', function(){
-          browser.setLocation('users/add');
-          var newUserName = 'LastNameNotRequired'
+        var newUserName = 'FirstNameNotRequired'
 
-          username.sendKeys(newUserName);
-          fname.sendKeys('Tyler');
-          // lname.sendKeys('Davidson');
-          email.sendKeys('tyler@david.johnny');
-          type.click();
-          password.sendKeys('eduardo');
-          confirm.sendKeys('eduardo');
-          submit.click();
+        addCustomUser( newUserName, 'Tyler', '', 'tyler@david.johnny', 'eduardo' )
 
-          expect(browser.getCurrentUrl()).toBe(baseURL + '/#/users');
+        expect(browser.getCurrentUrl()).toBe(baseURL + '/#/users');
 
-          addUser( newUserName );
+        addUser( newUserName );
 
-          expect(browser.getCurrentUrl()).toBe(baseURL + '/#/users');
+        expect(browser.getCurrentUrl()).toBe(baseURL + '/#/users');
 
-          deleteLastUser();
+        deleteLastUser();
       });
 
       it('creates multiple users through bulk import', function(){
