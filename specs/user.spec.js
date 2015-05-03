@@ -58,8 +58,8 @@ describe('Basic User Tests', function(){
   // Login as a basic user
   beforeEach(function() {
     browser.get(baseURL + '/login.html');
-    element(by.id('user-username')).sendKeys(TestUserName);
-    element(by.id('user-password')).sendKeys(TestUserPassword);
+    element(by.id('user-username')).sendKeys(testUserName);
+    element(by.id('user-password')).sendKeys(testUserPassword);
     element(by.buttonText('Submit')).click();
 
     browser.driver.wait(function(){
